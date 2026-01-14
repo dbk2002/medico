@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medico - Emergency Contacts</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #10b981;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--dark-bg);
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .glassmorphic {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-hover {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+            transition: transform 0.5s ease;
+        }
+
+        .card-hover:hover {
+            transform: perspective(1000px) rotateX(5deg) rotateY(10deg) scale(1.05);
+        }
+
+        .nav-link {
+            position: relative;
+            font-weight: 500;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Dark Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glassmorphic py-4">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <div class="flex items-center space-x-4">
+                <img src="{{ url_for('static', filename='images/new_medico.png') }}" alt="Medico Logo" class="h-12 w-auto">
+
+                <span class="tracking-wide text-white font-bold text-2xl" style="text-stroke: 2px red;">Medico</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="/main" class="nav-link text-gray-300 hover:text-white">Home</a>
+                <a href="{{ url_for('predict') }}" class="nav-link text-gray-300 hover:text-white">Health Check</a>
+                <a href="#" class="nav-link text-gray-300 hover:text-white">Services</a>
+                <a href="#" class="nav-link text-gray-300 hover:text-white">About</a>
+                <a href="#" class="nav-link text-gray-300 hover:text-white">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button class="text-white focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="bg-dark-bg py-24 px-6">
+        <div class="container mx-auto">
+            <h1 class="text-4xl font-bold mb-12 text-center gradient-text">Emergency Contacts</h1>
+
+            <div class="space-y-8">
+                <div class="glassmorphic rounded-2xl p-8">
+                    <h2 class="text-3xl font-bold mb-8 gradient-text">Top Hospitals</h2>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <!-- Hospital 1 -->
+                        <div class="glassmorphic rounded-2xl p-6 text-center card-hover">
+                            <img src="https://alwaridmedicaltourism.com/wp-content/uploads/2023/07/manipal_hospital_bangalore.jpg" alt="Manipal Hospital" class="w-full h-56 object-cover mb-6 rounded-lg">
+                            <h3 class="text-2xl font-bold mb-4 text-white">Manipal Hospital</h3>
+                            <p class="text-gray-300 mb-2">Address: 123 Main Street, Bangalore, 560001</p>
+                            <p class="text-gray-300">Contact: 080 1234 5678</p>
+                        </div>
+
+                        <!-- Hospital 2 -->
+                        <div class="glassmorphic rounded-2xl p-6 text-center card-hover">
+                            <img src="https://d1ea147o02h74h.cloudfront.net/apollo_hospitals_bangalore1.jpg" alt="Apollo Hospital" class="w-full h-56 object-cover mb-6 rounded-lg">
+                            <h3 class="text-2xl font-bold mb-4 text-white">Apollo Hospital</h3>
+                            <p class="text-gray-300 mb-2">Address: 456 Another Road, Bangalore, 560002</p>
+                            <p class="text-gray-300">Contact: 080 8765 4321</p>
+                        </div>
+
+                        <!-- Hospital 3 -->
+                        <div class="glassmorphic rounded-2xl p-6 text-center card-hover">
+                            <img src="https://www.asterhospitals.in/sites/default/files/2024-01/1500%20x%201050%20%282%29.jpg" alt="Aster RV Hospital" class="w-full h-56 object-cover mb-6 rounded-lg">
+                            <h3 class="text-2xl font-bold mb-4 text-white">Aster RV Hospital</h3>
+                            <p class="text-gray-300 mb-2">Address: 24th Main Road, Bangalore, 560076</p>
+                            <p class="text-gray-300">Contact: 080 5555 5555</p>
+                        </div>
+
+                        <!-- Hospital 4 -->
+                        <div class="glassmorphic rounded-2xl p-6 text-center card-hover">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d4/Mazumdar_Shaw_Medical_Center%2C_Narayana_Health_City%2C_Bangalore.jpg" alt="Narayana Health" class="w-full h-56 object-cover mb-6 rounded-lg">
+                            <h3 class="text-2xl font-bold mb-4 text-white">Narayana Health</h3>
+                            <p class="text-gray-300 mb-2">Address: 987 Fourth Street, Bangalore, 560004</p>
+                            <p class="text-gray-300">Contact: 080 9999 9999</p>
+                        </div>
+
+                        <!-- Hospital 5 -->
+                        <div class="glassmorphic rounded-2xl p-6 text-center card-hover">
+                            <img src="https://cdn.hexahealth.com/Image/1698908753263-425940203.png" alt="Dhee Hospitals" class="w-full h-56 object-cover mb-6 rounded-lg">
+                            <h3 class="text-2xl font-bold mb-4 text-white">Dhee Hospitals</h3>
+                            <p class="text-gray-300 mb-2">Address: 748, Kanakapura Road, Bangalore, 560062</p>
+                            <p class="text-gray-300">Contact: 080 4444 4444</p>
+                        </div>
+
+                        <!-- Hospital 6 -->
+                        <div class="glassmorphic rounded-2xl p-6 text-center card-hover">
+                            <img src="https://img.bookimed.com/clinic_webp/b10635840fb80.webp" alt="Fortis Hospital" class="w-full h-56 object-cover mb-6 rounded-lg">
+                            <h3 class="text-2xl font-bold mb-4 text-white">Fortis Hospital</h3>
+                            <p class="text-gray-300 mb-2">Address: 654 Sixth Avenue, Bangalore, 560006</p>
+                            <p class="text-gray-300">Contact: 080 3333 3333</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-bg border-t border-gray-800 py-8">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-400">&copy; 2025 Medico. All Rights Reserved.</p>
+            <p class="text-sm text-gray-500 mt-2">
+                Innovated by Dhanush B K, Kusum Pakira, Purushotham V Mitti
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

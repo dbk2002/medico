@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medico - Common Diseases</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #10b981;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--dark-bg);
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .glassmorphic {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link {
+            position: relative;
+            font-weight: 500;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .card-hover {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+            transition: transform 0.5s ease;
+        }
+
+        .card-hover:hover {
+            transform: perspective(1000px) rotateX(2deg) rotateY(2deg) scale(1.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Dark Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glassmorphic py-4">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <div class="flex items-center space-x-4">
+                <img src="{{ url_for('static', filename='images/new_medico.png') }}" alt="Medico Logo" class="h-12 w-auto">
+                <span class="text-2xl font-bold gradient-text">Medico</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="/main" class="nav-link text-gray-300 hover:text-white">Home</a>
+                <a href="{{ url_for('predict') }}" class="nav-link text-gray-300 hover:text-white">Health Check</a>
+                <a href="#" class="nav-link text-gray-300 hover:text-white">Services</a>
+                <a href="#" class="nav-link text-gray-300 hover:text-white">About</a>
+                <a href="#" class="nav-link text-gray-300 hover:text-white">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button class="text-white focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="bg-dark-bg py-24 px-6">
+        <div class="container mx-auto">
+            <h1 class="text-4xl font-bold mb-12 text-center gradient-text">Common Diseases</h1>
+
+            <div class="space-y-8">
+                <!-- Diabetes -->
+                <div class="glassmorphic rounded-2xl p-8 card-hover">
+                    <h2 class="text-3xl font-bold mb-4 gradient-text">Diabetes</h2>
+                    <p class="text-gray-300 mb-4">Diabetes is a chronic condition characterized by high levels of sugar (glucose) in the blood.</p>
+                    <ul class="space-y-2 text-gray-300 list-disc pl-5">
+                        <li>Symptoms: Increased thirst, frequent urination, extreme hunger, unexplained weight loss, fatigue.</li>
+                        <li>Causes: Genetic factors, lifestyle choices, and certain health conditions.</li>
+                        <li>Treatment: Medication, lifestyle changes, insulin therapy.</li>
+                    </ul>
+                </div>
+
+                <!-- Hypertension -->
+                <div class="glassmorphic rounded-2xl p-8 card-hover">
+                    <h2 class="text-3xl font-bold mb-4 gradient-text">Hypertension</h2>
+                    <p class="text-gray-300 mb-4">Hypertension, or high blood pressure, is a condition in which the force of the blood against the artery walls is too high.</p>
+                    <ul class="space-y-2 text-gray-300 list-disc pl-5">
+                        <li>Symptoms: Often asymptomatic, but can include headaches, shortness of breath, and nosebleeds.</li>
+                        <li>Causes: Poor diet, lack of exercise, obesity, genetic factors, stress.</li>
+                        <li>Treatment: Lifestyle changes, medication.</li>
+                    </ul>
+                </div>
+
+                <!-- Cold -->
+                <div class="glassmorphic rounded-2xl p-8 card-hover">
+                    <h2 class="text-3xl font-bold mb-4 gradient-text">Cold</h2>
+                    <p class="text-gray-300 mb-4">The common cold is a viral infection of your nose and throat (upper respiratory tract).</p>
+                    <ul class="space-y-2 text-gray-300 list-disc pl-5">
+                        <li>Symptoms: Runny or stuffy nose, sore throat, cough, congestion, slight body aches, sneezing.</li>
+                        <li>Causes: Various viruses, most commonly rhinoviruses.</li>
+                        <li>Treatment: Rest, fluids, over-the-counter cold remedies.</li>
+                    </ul>
+                </div>
+
+                <!-- Headache -->
+                <div class="glassmorphic rounded-2xl p-8 card-hover">
+                    <h2 class="text-3xl font-bold mb-4 gradient-text">Headache</h2>
+                    <p class="text-gray-300 mb-4">A headache is pain in any region of the head. It may occur on one or both sides of the head.</p>
+                    <ul class="space-y-2 text-gray-300 list-disc pl-5">
+                        <li>Symptoms: Throbbing, sharp, or dull pain, sensitivity to light or sound, nausea.</li>
+                        <li>Causes: Stress, certain foods, alcohol, lack of sleep, underlying health conditions.</li>
+                        <li>Treatment: Pain relievers, rest, hydration, stress management.</li>
+                    </ul>
+                </div>
+
+                <!-- Lower Back Pain -->
+                <div class="glassmorphic rounded-2xl p-8 card-hover">
+                    <h2 class="text-3xl font-bold mb-4 gradient-text">Lower Back Pain</h2>
+                    <p class="text-gray-300 mb-4">Lower back pain is a common condition that affects the lower portion of the spine.</p>
+                    <ul class="space-y-2 text-gray-300 list-disc pl-5">
+                        <li>Symptoms: Muscle ache, shooting or stabbing pain, pain that radiates down the leg, limited range of motion.</li>
+                        <li>Causes: Muscle or ligament strain, bulging or ruptured disks, arthritis, skeletal irregularities.</li>
+                        <li>Treatment: Physical therapy, medications, rest, lifestyle modifications.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-bg border-t border-gray-800 py-8">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-400">&copy; 2025 Medico. All Rights Reserved.</p>
+            <p class="text-sm text-gray-500 mt-2">
+                Innovated by Dhanush B K, Kusum Pakira, Purushotham V Mitti
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

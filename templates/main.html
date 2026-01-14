@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medico - Next-Gen Health Companion</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #10b981;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--dark-bg);
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .glassmorphic {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dynamic-gradient {
+            background: linear-gradient(-45deg, #3b82f6, #10b981, #6366f1, #ec4899);
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+        }
+
+        .nav-link {
+            position: relative;
+            font-weight: 500;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .card-hover {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+            transition: transform 0.5s ease;
+        }
+
+        .card-hover:hover {
+            transform: perspective(1000px) rotateX(2deg) rotateY(5deg) scale(1.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Dark Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glassmorphic py-4">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <div class="flex items-center space-x-4">
+                <img src="{{ url_for('static', filename='images/new_medico.png') }}" alt="Medico Logo" class="h-12 w-auto">
+                <span class="tracking-wide text-white font-bold text-2xl" style="text-stroke: 2px red;">Medico</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="main" class="nav-link text-gray-300 hover:text-white">Home</a>
+                <a href="predict" class="nav-link text-gray-300 hover:text-white">Health Check</a>
+                <a href="/blood" class="nav-link text-gray-300 hover:text-white">Blood Bank</a>
+                <a href="#services" class="nav-link text-gray-300 hover:text-white">Services</a>
+                <a href="#about" class="nav-link text-gray-300 hover:text-white">About</a>
+                <a href="#contact" class="nav-link text-gray-300 hover:text-white">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button class="text-white focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center dynamic-gradient text-center pt-20">
+        <div class="container mx-auto px-6 relative z-10">
+            <h1 class="text-6xl font-extrabold mb-6 text-white">Welcome, {{ user.username }}</h1>
+            <p class="text-xl mb-10 text-gray-200 max-w-2xl mx-auto">
+                Your AI-powered personal health companion, delivering intelligent insights and proactive care.
+            </p>
+            <a href="{{ url_for('predict') }}" class="inline-block bg-white text-black px-10 py-4 rounded-full text-lg font-semibold hover:scale-105 transform">
+                Start Health Assessment
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="bg-dark-bg py-16 px-6">
+        <!-- Health Profile Section -->
+        <section class="container mx-auto mb-16">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glassmorphic rounded-2xl p-8 card-hover relative">
+                    <h2 class="text-3xl font-bold mb-6 gradient-text">Your Health Profile</h2>
+                    <div id="profileView" class="space-y-4 text-gray-300">
+                        <div class="flex justify-between items-center">
+                            <span>Name:</span>
+                            <span class="font-semibold">{{ user.username }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Email:</span>
+                            <span class="font-semibold">{{ user.email }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Age:</span>
+                            <span class="font-semibold">{{ health_info.profile.age }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Gender:</span>
+                            <span class="font-semibold">{{ health_info.profile.gender }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Edit Button -->
+                    <button onclick="toggleEditForm()" class="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Edit
+                    </button>
+
+                    <!-- Edit Form -->
+                    <div id="profileEdit" class="hidden space-y-4 mt-4">
+                        <form action="/update-profile" method="POST" class="space-y-4">
+                            <div>
+                                <label for="name" class="block text-gray-300 mb-2">Name</label>
+                                <input type="text" id="name" name="name" value="{{ user.username }}" class="w-full p-2 bg-gray-700 text-white rounded">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-gray-300 mb-2">Email</label>
+                                <input type="email" id="email" name="email" value="{{ user.email }}" class="w-full p-2 bg-gray-700 text-white rounded">
+                            </div>
+                            <div>
+                                <label for="age" class="block text-gray-300 mb-2">Age</label>
+                                <input type="number" id="age" name="age" value="{{ health_info.profile.age }}" class="w-full p-2 bg-gray-700 text-white rounded">
+                            </div>
+                            <div>
+                                <label for="gender" class="block text-gray-300 mb-2">Gender</label>
+                                <select id="gender" name="gender" class="w-full p-2 bg-gray-700 text-white rounded">
+                                    <option value="Male" {% if health_info.profile.gender == 'Male' %}selected{% endif %}>Male</option>
+                                    <option value="Female" {% if health_info.profile.gender == 'Female' %}selected{% endif %}>Female</option>
+                                    <option value="Other" {% if health_info.profile.gender == 'Other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                            <div class="flex space-x-4">
+                                <button type="submit" class="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                    Save
+                                </button>
+                                <button type="button" onclick="toggleEditForm()" class="flex-1 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="mt-8 flex space-x-4">
+                        <a href="{{ url_for('common_diseases') }}" class="flex-1 glassmorphic rounded-lg p-4 text-center hover:scale-105">
+                            <i class="fas fa-notes-medical text-2xl mb-2 gradient-text"></i>
+                            <p class="text-gray-300">Common Diseases</p>
+                        </a>
+                        <a href="{{ url_for('emergency_contacts') }}" class="flex-1 glassmorphic rounded-lg p-4 text-center hover:scale-105">
+                            <i class="fas fa-ambulance text-2xl mb-2 gradient-text"></i>
+                            <p class="text-gray-300">Emergency Contacts</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-8">
+                    <div class="glassmorphic rounded-2xl p-6 card-hover">
+                        <h3 class="text-2xl font-bold mb-4 gradient-text">Health Risk Analysis</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span>Cardiovascular Risk:</span>
+                                <span class="text-yellow-500 font-semibold">Moderate</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span>Metabolic Health:</span>
+                                <span class="text-green-500 font-semibold">Good</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glassmorphic rounded-2xl p-6 card-hover">
+                        <h3 class="text-2xl font-bold mb-4 gradient-text">Quick Actions</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="bookDoctorAppointment()" class="bg-blue-600 text-white rounded-lg px-6 py-3 text-lg hover:bg-blue-700 transition">
+                                Book Checkup
+                            </button>                                                        
+                            <a href="#" class="bg-green-600 text-white rounded-lg p-3 text-center hover:bg-green-700">
+                                Consult AI
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+ <section class="container mx-auto mb-16">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">Our Advanced Services</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glassmorphic rounded-2xl p-8 text-center card-hover">
+                    <i class="fas fa-diagnoses text-5xl mb-6 gradient-text"></i>
+                    <h3 class="text-2xl font-bold mb-4 text-white">AI Diagnostics</h3>
+                    <p class="text-gray-300">Advanced predictive health analysis using machine learning.</p>
+                </div>
+                <div class="glassmorphic rounded-2xl p-8 text-center card-hover">
+                    <i class="fas fa-brain text-5xl mb-6 gradient-text"></i>
+                    <h3 class="text-2xl font-bold mb-4 text-white">Personalized Insights</h3>
+                    <p class="text-gray-300">Tailored health recommendations based on your unique profile.</p>
+                </div>
+                <div class="glassmorphic rounded-2xl p-8 text-center card-hover">
+                    <i class="fas fa-clock text-5xl mb-6 gradient-text"></i>
+                    <h3 class="text-2xl font-bold mb-4 text-white">24/7 Support</h3>
+                    <p class="text-gray-300">Instant access to health resources and emergency guidance.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Services Section -->
+<div id="services" class="glassmorphic rounded-2xl p-8 mb-8">
+    <h2 class="text-3xl font-bold mb-6 gradient-text">Our Services</h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Service 1 -->
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-3">Personalized Health Insights</h3>
+                <p class="text-gray-300 mb-4">Get a customized health assessment based on your data and metrics, providing a clear understanding of your well-being with detailed recommendations.</p>
+                <div class="mt-2">
+                    <span class="inline-block px-3 py-1 bg-blue-500 text-white text-xs rounded">Personalized</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-3">Health Condition Prediction</h3>
+                <p class="text-gray-300 mb-4">Receive predictions on potential health issues, along with insights into symptoms, causes, and suitable drug treatments to stay proactive.</p>
+                <div class="mt-2">
+                    <span class="inline-block px-3 py-1 bg-blue-500 text-white text-xs rounded">Preventive</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-3">Emergency Support Contacts</h3>
+                <p class="text-gray-300 mb-4">Quickly access essential emergency contact details for immediate assistance in health crises.</p>
+                <div class="mt-2">
+                    <span class="inline-block px-3 py-1 bg-red-500 text-white text-xs rounded">Emergency</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-3">First Aid Knowledge & Tips</h3>
+                <p class="text-gray-300 mb-4">Learn vital first aid techniques and guidelines to effectively handle common medical emergencies.</p>
+                <div class="mt-2">
+                    <span class="inline-block px-3 py-1 bg-green-500 text-white text-xs rounded">Essential</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service 5 -->
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-3">Symptom Analysis & Guidance</h3>
+                <p class="text-gray-300 mb-4">Check your symptoms, identify possible causes, and receive recommendations on the next steps for appropriate care.</p>
+                <div class="mt-2">
+                    <span class="inline-block px-3 py-1 bg-yellow-500 text-white text-xs rounded">Diagnostic</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service 6 -->
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-3">Health Risk Evaluation</h3>
+                <p class="text-gray-300 mb-4">Analyze potential health risks based on your lifestyle and medical history, with actionable insights to help reduce them.</p>
+                <div class="mt-2">
+                    <span class="inline-block px-3 py-1 bg-purple-500 text-white text-xs rounded">Proactive</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About Us Section -->
+<div id="about" class="glassmorphic rounded-2xl p-8 mb-8">
+    <h2 class="text-3xl font-bold mb-6 gradient-text">About Us</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-3">Our Mission</h3>
+                <p class="text-gray-300 mb-4">We are committed to delivering the best health information and support through our innovative project. Our mission is to empower users with reliable health insights and assist them in managing their well-being effectively.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="inline-block px-3 py-1 bg-blue-500 text-white text-xs rounded">Reliability</span>
+                    <span class="inline-block px-3 py-1 bg-blue-500 text-white text-xs rounded">Accuracy</span>
+                    <span class="inline-block px-3 py-1 bg-blue-500 text-white text-xs rounded">Care</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-3">Our Team</h3>
+                <p class="text-gray-300 mb-2">We are the creators of this final year project during our 8th semester at K S Institute of Technology:</p>
+                <p class="text-gray-300 mb-1"><i class="fas fa-user-md mr-2 text-blue-400"></i><strong>Dhanush B K</strong></p>
+                <p class="text-gray-300 mb-1"><i class="fas fa-user-md mr-2 text-blue-400"></i><strong>Kusum Pakira</strong></p>
+                <p class="text-gray-300 mb-4"><i class="fas fa-user-md mr-2 text-blue-400"></i><strong>Purushotham V Mitti</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 mt-6">
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-3">Our Approach</h3>
+                <p class="text-gray-300 mb-4">During development, we focused on designing a user-friendly interface and integrating features that address common health concerns. Our goal is to make essential health information easily accessible, bridging the gap between users and reliable resources.</p>
+            </div>
+        </div>
+
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-3">Our Vision</h3>
+                <p class="text-gray-300 mb-4">We hope this project becomes a valuable tool for those seeking trustworthy health guidance and support. Thank you for exploring our work—we are excited to enhance and expand it further.</p>
+                <div class="mt-2">
+                    <a href="#contact" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 inline-block">
+                        <i class="fas fa-comments mr-2"></i>Get in Touch
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Us Section -->
+<div id="contact" class="glassmorphic rounded-2xl p-8 mb-8">
+    <h2 class="text-3xl font-bold mb-6 gradient-text">Contact Us</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Reach Out to Us</h3>
+                <div class="flex items-start mb-4">
+                    <i class="fas fa-envelope mt-1 mr-3 text-blue-400"></i>
+                    <div>
+                        <p class="text-white font-semibold">Email:</p>
+                        <a href="mailto:support@medico.com" class="text-blue-300 hover:text-blue-200">support@medico.com</a>
+                    </div>
+                </div>
+
+                <div class="flex items-start mb-4">
+                    <i class="fas fa-phone-alt mt-1 mr-3 text-blue-400"></i>
+                    <div>
+                        <p class="text-white font-semibold">Phone:</p>
+                        <p class="text-gray-300">+91 76558 23455</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start mb-4">
+                    <i class="fas fa-map-marker-alt mt-1 mr-3 text-blue-400"></i>
+                    <div>
+                        <p class="text-white font-semibold">Address:</p>
+                        <p class="text-gray-300">#14, Kanakapura Road, Raghuvanahalli,<br>Bengaluru, KA-560109</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start">
+                    <i class="fas fa-clock mt-1 mr-3 text-blue-400"></i>
+                    <div>
+                        <p class="text-white font-semibold">Office Hours:</p>
+                        <p class="text-gray-300">Mon-Fri: 9:00 AM - 6:00 PM</p>
+                        <p class="text-gray-300">Sat: 10:00 AM - 4:00 PM</p>
+                        <p class="text-gray-300">Sun: Closed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glassmorphic rounded-xl p-6 card-hover">
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Send Us a Message</h3>
+                <form class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-white font-semibold mb-1">Name</label>
+                        <input type="text" id="name" name="name" class="bg-gray-800 bg-opacity-50 border border-gray-600 text-white p-2 w-full rounded" required>
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-white font-semibold mb-1">Email</label>
+                        <input type="email" id="email" name="email" class="bg-gray-800 bg-opacity-50 border border-gray-600 text-white p-2 w-full rounded" required>
+                    </div>
+
+                    <div>
+                        <label for="subject" class="block text-white font-semibold mb-1">Subject</label>
+                        <input type="text" id="subject" name="subject" class="bg-gray-800 bg-opacity-50 border border-gray-600 text-white p-2 w-full rounded" required>
+                    </div>
+
+                    <div>
+                        <label for="message" class="block text-white font-semibold mb-1">Message</label>
+                        <textarea id="message" name="message" rows="4" class="bg-gray-800 bg-opacity-50 border border-gray-600 text-white p-2 w-full rounded" required></textarea>
+                    </div>
+
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 w-full">
+                        <i class="fas fa-paper-plane mr-2"></i>Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-6 text-center">
+        <div class="glassmorphic rounded-xl p-4 card-hover inline-block">
+            <p class="text-gray-300"><i class="fas fa-headset mr-2 text-green-500"></i>Emergency Support: <a href="mailto:emergency@medico.com" class="text-blue-300 hover:text-blue-200">emergency@medico.com</a> (24/7)</p>
+        </div>
+    </div>
+</div>
+        <script>
+            function toggleEditForm() {
+                const profileView = document.getElementById('profileView');
+                const profileEdit = document.getElementById('profileEdit');
+
+                profileView.classList.toggle('hidden');
+                profileEdit.classList.toggle('hidden');
+            }
+        </script>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-bg border-t border-gray-800 py-8">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-400">&copy; 2025 Medico. All Rights Reserved.</p>
+            <p class="text-sm text-gray-500 mt-2">
+                Innovated by Dhanush B K, Kusum Pakira, Purushotham V Mitti
+            </p>
+            <p>Disclaimer:
+                 This medical recommendation system is for informational purposes only and should not replace professional medical advice, diagnosis, or treatment. Always consult with a qualified healthcare provider for any medical concerns. The developers are not liable for any decisions or consequences resulting from the use of this system.</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        async function bookDoctorAppointment() {
+            const { value: formValues } = await Swal.fire({
+                title: 'Book Doctor Appointment',
+                html: `
+                    <select id="doctor" class="swal2-input" style="background-color: #2d3748; color: #e2e8f0; border: 1px solid #4a5568;" required>
+                        <option value="">Select Doctor</option>
+                        <option value="Dr. Smith - General Physician">Dr. Smith - General Physician</option>
+                        <option value="Dr. Priya Sharma - Cardiologist">Dr. Priya Sharma - Cardiologist</option>
+                        <option value="Dr. Raj Patel - Dermatologist">Dr. Raj Patel - Dermatologist</option>
+                    </select>
+                    <input type="date" id="date" class="swal2-input" style="background-color: #2d3748; color: #e2e8f0; border: 1px solid #4a5568;" required>
+                    <input type="time" id="time" class="swal2-input" style="background-color: #2d3748; color: #e2e8f0; border: 1px solid #4a5568;" required>
+                    <input type="text" id="reason" class="swal2-input" placeholder="Reason for Visit (optional)" style="background-color: #2d3748; color: #e2e8f0; border: 1px solid #4a5568;">
+                `,
+                focusConfirm: false,
+                preConfirm: () => {
+                    const doctor = document.getElementById('doctor').value;
+                    const date = document.getElementById('date').value;
+                    const time = document.getElementById('time').value;
+                    const reason = document.getElementById('reason').value;
+        
+                    if (!doctor || !date || !time) {
+                        Swal.showValidationMessage('Please fill all required fields');
+                        return false;
+                    }
+        
+                    return { doctor, date, time, reason };
+                },
+                confirmButtonText: 'Confirm Appointment',
+                background: '#1e293b',
+                color: '#e2e8f0',
+                confirmButtonColor: '#10b981'
+            });
+        
+            if (formValues) {
+                Swal.fire({
+                    title: 'Appointment Confirmed!',
+                    html: `
+                        <div class="text-left text-gray-300">
+                            <p><span class="font-semibold text-white">Doctor:</span> ${formValues.doctor}</p>
+                            <p><span class="font-semibold text-white">Date:</span> ${formValues.date}</p>
+                            <p><span class="font-semibold text-white">Time:</span> ${formValues.time}</p>
+                            ${formValues.reason ? `<p><span class="font-semibold text-white">Reason:</span> ${formValues.reason}</p>` : ''}
+                        </div>
+                    `,
+                    icon: 'success',
+                    background: '#1e293b',
+                    color: '#e2e8f0',
+                    confirmButtonColor: '#3b82f6',
+                    iconColor: '#10b981'
+            });
+        
+            // Send the booking email
+            await fetch('/book-checkup-email', {
+                method: 'POST'
+            });
+        }
+        
+    }
+    </script>
+</body>
+</html>    
