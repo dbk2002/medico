@@ -42,6 +42,9 @@
 ![Disease Prediction](screenshots/display%20disease.png)
 *The system predicts the disease and suggests medications.*
 
+![Recommended Doctor](screenshots/practo%20link.png)
+*The system suggests specialized doctors and provides direct links to book appointments via Practo.*
+
 ### Blood Bank Assistance
 ![Blood Bank Dashboard](screenshots/bloodbank%20dashboard.png)
 *Real-time tracking of blood availability across different groups.*
