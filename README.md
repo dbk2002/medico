@@ -30,21 +30,21 @@
 ## 📸 Screenshots
 
 ### Landing Page & Dashboard
-![Landing Page](screenshots/main landing page.png)
+![Landing Page](screenshots/main%20landing%20page.png)
 *The main dashboard offering quick access to health profiles and services.*
 
 ### Medicine Recommendation System
-![Symptom Input](screenshots/entering symptoms.png)
+![Symptom Input](screenshots/entering%20symptoms.png)
 *Users enter symptoms to get immediate health insights.*
 
-![Disease Prediction](screenshots/display disease.png)
+![Disease Prediction](screenshots/display%20disease.png)
 *The system predicts the disease and suggests medications.*
 
 ### Blood Bank Assistance
-![Blood Bank Dashboard](screenshots/bloodbank dashboard.png)
+![Blood Bank Dashboard](screenshots/bloodbank%20dashboard.png)
 *Real-time tracking of blood availability across different groups.*
 
-![Nearby Blood Banks](screenshots/blood nearby hospital.png)
+![Nearby Blood Banks](screenshots/blood%20nearby%20hospital.png)
 *Locator for nearby blood banks and donation centers.*
 
 ## ⚙️ Installation & Setup
