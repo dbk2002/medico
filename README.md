@@ -2,6 +2,8 @@
 
 **Medico** is a specialized digital healthcare platform designed to provide comprehensive medicine guidance and blood bank assistance. It leverages machine learning to offer personalized health insights and streamlines the process of finding blood donors and banks.
 
+![Logo](static/images/new_medico.png)
+
 ## 🚀 Features
 
 ### 1. AI-Powered Medicine Guidance
